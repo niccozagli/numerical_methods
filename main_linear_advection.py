@@ -19,7 +19,7 @@ def linearAdvect(parameters):
     u = parameters['fluid_velocity']
     #Derived parameters
     c = u/(dx/dt)
-    print('The value of the Courant number is %f',c)
+    print("The value of the Courant number is c={}.".format(c))
     x = np.arange(xmin,xmax,dx)
     t = np.arange(tmin,tmax,dt)
 
