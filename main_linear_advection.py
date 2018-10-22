@@ -1,3 +1,4 @@
+import numpy as np
 #Starting to write code in python
 def main():
     "Setting up the parameters of the integration and the fluid"
