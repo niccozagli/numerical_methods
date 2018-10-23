@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import rc
 from initial_conditions import *
 from AdvectionSchemes import *
 
@@ -7,9 +8,9 @@ def main():
     "Setting up the parameters of the integration and the fluid"
     "Integrating the linear advection equation, starting from a given"
     "initial condition"
-    parameters={'xmin': 0 , 'xmax' : 1, 'dx' : 4*10**-4,
-                'tmin': 0 , 'tmax' : 1, 'dt' : 2*10**-4,
-                'fluid_velocity' : 0.2}
+    parameters={'xmin': 0 , 'xmax' : 2.5, 'dx' : 1*10**-4,
+                'tmin': 0 , 'tmax' : 1.5, 'dt' : 4*10**-4,
+                'fluid_velocity' : 0.8}
     linearAdvect(parameters)
 
 def linearAdvect(parameters):
@@ -41,14 +42,31 @@ def linearAdvect(parameters):
     phiBTCS , M , V = BTCS( x , t , phi0.copy() , c )
 
     "Plotting the results"
-    plt.figure(1)
     plt.ion()
+    plt.figure(0)
+    plt.clf()
     plt.plot(x,phi0,'b',label='Initial Condition')
-    plt.plot(x,phiAnalytic,'k',linestyle='--')
-    plt.show()
+    plt.plot(x,phiAnalytic,'k',linestyle='--',label='Analytical solution')
+    plt.plot(x,phiBTCS,'r',label='Numerical solution',linewidth=0.4)
+    plt.legend()
+    plt.xlabel('position x')
+    plt.ylabel('Independent variable')
+    plt.title('Initial, analytical and numerical solution')
+    plt.savefig('./comparison.pdf')
+
+    plt.figure(1)
+    plt.clf()
+    plt.plot(t[1:],np.diff(M))
+    plt.xlabel('time t')
+    plt.title('M[t+1]-M[t] vs time')
+    plt.savefig('./First_moment.pdf')
+
+    plt.figure(2)
+    plt.clf()
+    plt.plot(t[1:],np.diff(V))
+    plt.title('V[t+1]-V[t] vs time')
+    plt.savefig('./Secondo_moment.pdf')
 
 
-
-
-#Calling the main function
+"Calling the main function of the program"
 main()
