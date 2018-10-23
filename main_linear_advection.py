@@ -1,5 +1,5 @@
 import numpy as np
-from initial_conditions.py import *
+from initial_conditions import *
 
 def main():
     "Setting up the parameters of the integration and the fluid"
