@@ -1,5 +1,6 @@
 import numpy as np
-#Starting to write code in python
+from initial_conditions.py import *
+
 def main():
     "Setting up the parameters of the integration and the fluid"
     "Integrating the linear advection equation, starting from a given"
@@ -10,6 +11,7 @@ def main():
     linearAdvect(parameters)
 
 def linearAdvect(parameters):
+    "Input parameters"
     xmin = parameters['xmin']
     xmax = parameters['xmax']
     tmin = parameters['tmin']
@@ -17,11 +19,24 @@ def linearAdvect(parameters):
     dx = parameters['dx']
     dt = parameters['dt']
     u = parameters['fluid_velocity']
-    #Derived parameters
+
+    "Derived parameters"
     c = u/(dx/dt)
     print("The value of the Courant number is c={}.".format(c))
     x = np.arange(xmin,xmax,dx)
     t = np.arange(tmin,tmax,dt)
+
+    "Initial condition"
+    alpha = 0
+    beta = 0.6
+    phi0 = cosBell( x , alpha , beta )
+
+    "Analytical solution at the last time tmax"
+
+    phiAnalytic = cosBell( (x-u*tmax)%(xmax-xmin) , alpha , beta  )
+
+
+
 
 
 #Calling the main function
