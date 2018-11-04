@@ -54,6 +54,7 @@ def linearAdvect(parameters):
     plt.title('Initial, analytical and numerical solution')
     plt.savefig('./comparison.pdf')
 
+
     plt.figure(1)
     plt.clf()
     plt.plot(t[1:],np.diff(M))
@@ -65,8 +66,9 @@ def linearAdvect(parameters):
     plt.clf()
     plt.plot(t[1:],np.diff(V))
     plt.title('V[t+1]-V[t] vs time')
-    plt.savefig('./Secondo_moment.pdf')
+    plt.savefig('./Second_moment.pdf')
 
+    plt.show()
 
 "Calling the main function of the program"
 main()
