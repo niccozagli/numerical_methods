@@ -42,7 +42,7 @@ def linearAdvect(parameters):
     phiBTCS , M , V = BTCS( x , t , phi0.copy() , c )
 
     "Plotting the results"
-    plt.ion()
+    #plt.ion()
     plt.figure(0)
     plt.clf()
     plt.plot(x,phi0,'b',label='Initial Condition')
@@ -53,7 +53,7 @@ def linearAdvect(parameters):
     plt.ylabel('Independent variable')
     plt.title('Initial, analytical and numerical solution')
     plt.savefig('./comparison.pdf')
-
+    plt.show()
 
     plt.figure(1)
     plt.clf()
@@ -61,14 +61,15 @@ def linearAdvect(parameters):
     plt.xlabel('time t')
     plt.title('M[t+1]-M[t] vs time')
     plt.savefig('./First_moment.pdf')
+    plt.show()
 
     plt.figure(2)
     plt.clf()
     plt.plot(t[1:],np.diff(V))
     plt.title('V[t+1]-V[t] vs time')
     plt.savefig('./Second_moment.pdf')
-
     plt.show()
+
 
 "Calling the main function of the program"
 main()
