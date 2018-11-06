@@ -1,7 +1,7 @@
 "In this module we will define some advection schemes to integrate the linear"
 "advection equation. In particular, we have defined two integration schemes: "
 " - the upwind scheme (which is FTBS if the velocity 'u' of the fluid is u>=0"
-" and FTFS if u,0"
+" and FTFS if u<0"
 " - the BTCS scheme."
 
 "Each scheme returns the evoluted variable at the last time tmax and the whole"
