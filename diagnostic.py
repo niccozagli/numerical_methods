@@ -1,5 +1,4 @@
 # Various function for plotting results and for calculating error measures
-
 import numpy as np
 
 def lpErrorNorm(phi, phiExact,p):
@@ -8,7 +7,7 @@ def lpErrorNorm(phi, phiExact,p):
 
     # calculate the error and the lp error norm
     phiError = np.abs(phi - phiExact)
-    lp = np.power(sum(phiError**p)/sum(np.abs(phiExact)**p),1/p)
+    lp = np.power( sum(phiError**p)/sum(np.abs(phiExact)**p) , 1/p )
 
     return lp
 

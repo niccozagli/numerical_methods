@@ -42,7 +42,7 @@ def FTFS( x , t , phiold , c ):
     V = np.zeros(nt)
     for it in range(nt):
         for j in range(nx):
-            phi[j] = phiold[j]+abs(c)*(phiold[(j+1)%nx]-phiold[(j)%nx])
+            phi[j] = phiold[j]+abs(c)*(phiold[(j+1)%nx]-phiold[j])
 
         phiold = phi.copy()
         M[it] = sum(phiold)
@@ -50,7 +50,6 @@ def FTFS( x , t , phiold , c ):
     return phiold , M , V
 
 def BTCS( x , t , phiold , c ):
-    phi = np.zeros_like(phiold)
     nx = len(x)
     nt = len(t)
     M = np.zeros(nt)
@@ -63,8 +62,7 @@ def BTCS( x , t , phiold , c ):
     q[1] = -c/2
     q[-1] = c/2
     for it in range(nt):
-        phi = linalg.solve_circulant(q,phiold)
-        phiold = phi.copy()
+        phiold = linalg.solve_circulant(q,phiold)
         M[it] = sum(phiold)
         V[it] = sum(phiold**2)
     return phiold , M , V
