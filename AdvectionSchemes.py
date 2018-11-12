@@ -11,6 +11,7 @@
 
 import numpy as np
 import scipy.linalg as linalg
+from conservation_and_total_variation import *
 
 def upwind( x , t , phiold , c ):
     if(c>=0):
@@ -30,8 +31,8 @@ def FTBS( x , t , phiold , c ):
             phi[j] = phiold[j]-c*(phiold[j%nx]-phiold[(j-1)%nx])
 
         phiold = phi.copy()
-        M[it] = sum(phiold)
-        V[it] = sum(phiold**2)
+        M[it] = first_mom(phiold)
+        V[it] = second_mom(phiold)
     return phiold , M , V
 
 def FTFS( x , t , phiold , c ):
@@ -45,8 +46,8 @@ def FTFS( x , t , phiold , c ):
             phi[j] = phiold[j]+abs(c)*(phiold[(j+1)%nx]-phiold[j])
 
         phiold = phi.copy()
-        M[it] = sum(phiold)
-        V[it] = sum(phiold**2)
+        M[it] = first_mom(phiold)
+        V[it] = second_mom(phiold)
     return phiold , M , V
 
 def BTCS( x , t , phiold , c ):
@@ -63,6 +64,34 @@ def BTCS( x , t , phiold , c ):
     q[-1] = c/2
     for it in range(nt):
         phiold = linalg.solve_circulant(q,phiold)
-        M[it] = sum(phiold)
-        V[it] = sum(phiold**2)
+        M[it] = first_mom(phiold)
+        V[it] = second_mom(phiold)
+    return phiold , M , V
+
+def Lax_Wendroff( x , t , phiold , c ):
+    nx = len(x)
+    nt = len(t)
+    phi = np.zeros_like(phiold)
+    M = np.zeros(nt)
+    V = np.zeros(nt)
+    for it in range(nt):
+        for j in range(nx):
+            phi[j]=phiold[j]-c/2*( (1-c)*phiold[(j+1)%nx] + 2*c*phiold[j] - (1+c)*phiold[(j-1)%nx] )
+        phiold=phi.copy()
+        M[it]=first_mom(phiold)
+        V[it]=second_mom(phiold)
+    return phiold , M , V
+
+def Warming_Beam( x, t , phiold , c ):
+    nx = len(x)
+    nt = len(t)
+    phi = np.zeros_like(phiold)
+    M = np.zeros(nt)
+    V = np.zeros(nt)
+    for it in range(nt):
+        for j in range(nx):
+            phi[j]=phiold[j]-c/2*( (3-c)*phiold[j] - 2*(2-c)*phiold[(j-1)%nx] + (1-c)*phiold[(j-2)%nx] )
+        phiold=phi.copy()
+        M[it]=first_mom(phiold)
+        V[it]=second_mom(phiold)
     return phiold , M , V

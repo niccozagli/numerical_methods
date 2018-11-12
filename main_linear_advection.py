@@ -8,9 +8,9 @@ def main():
     "Setting up the parameters of the integration and the fluid"
     "Integrating the linear advection equation, starting from a given"
     "initial condition"
-    parameters={'xmin': 0 , 'xmax' : 2.5, 'dx' : 1*10**-4,
-                'tmin': 0 , 'tmax' : 1.5, 'dt' : 4*10**-4,
-                'fluid_velocity' : 0.8}
+    parameters={'xmin': 0 , 'xmax' : 2, 'dx' : 10**-2,
+                'tmin': 0 , 'tmax' : 4, 'dt' : 10**-2,
+                'fluid_velocity' : 0.3}
     linearAdvect(parameters)
 
 def linearAdvect(parameters):
@@ -24,7 +24,7 @@ def linearAdvect(parameters):
     u = parameters['fluid_velocity']
 
     "Derived parameters"
-    c = u/(dx/dt)
+    c = u*dt/dx
     print("The value of the Courant number is c={}.".format(c))
     x = np.arange(xmin,xmax,dx)
     t = np.arange(tmin,tmax,dt)
@@ -39,15 +39,15 @@ def linearAdvect(parameters):
 
     "Integration of the PDE using one of the advection schemes"
     "The BTCS scheme is unconditionally stable and conservative (if pbc)"
-    phiBTCS , M , V = BTCS( x , t , phi0.copy() , c )
-
+    #phi , M , V = BTCS( x , t , phi0.copy() , c )
+    phi , M , V = Lax_Wendroff( x , t , phi0.copy() , c )
+    #phi , M , V = Warming_Beam( x , t , phi0.copy() , c )
     "Plotting the results"
-    #plt.ion()
     plt.figure(0)
     plt.clf()
     plt.plot(x,phi0,'b',label='Initial Condition')
     plt.plot(x,phiAnalytic,'k',linestyle='--',label='Analytical solution')
-    plt.plot(x,phiBTCS,'r',label='Numerical solution',linewidth=0.4)
+    plt.plot(x,phi,'r',label='Numerical solution',linewidth=0.4)
     plt.legend()
     plt.xlabel('position x')
     plt.ylabel('Independent variable')
