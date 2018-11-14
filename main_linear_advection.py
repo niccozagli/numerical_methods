@@ -9,7 +9,7 @@ def main():
     "Integrating the linear advection equation, starting from a given"
     "initial condition"
     parameters={'xmin': 0 , 'xmax' : 2, 'dx' : 10**-2,
-                'tmin': 0 , 'tmax' : 4, 'dt' : 10**-2,
+                'tmin': 0 , 'tmax' : 3, 'dt' : 0.5*10**-3,
                 'fluid_velocity' : 0.3}
     linearAdvect(parameters)
 
@@ -32,16 +32,17 @@ def linearAdvect(parameters):
     "Initial condition"
     alpha = 0
     beta = 0.4
-    phi0 = cosBell( x , alpha , beta )
-
+    #phi0 = cosBell( x , alpha , beta )
+    phi0 = squareWave(x,alpha,beta)
     "Analytical solution at the last time tmax"
-    phiAnalytic = cosBell( (x-u*tmax)%(xmax-xmin) , alpha , beta  )
-
+    #phiAnalytic = cosBell( (x-u*tmax)%(xmax-xmin) , alpha , beta )
+    phiAnalytic = squareWave( (x-u*tmax)%(xmax-xmin) , alpha , beta )
     "Integration of the PDE using one of the advection schemes"
     "The BTCS scheme is unconditionally stable and conservative (if pbc)"
     #phi , M , V = BTCS( x , t , phi0.copy() , c )
-    phi , M , V = Lax_Wendroff( x , t , phi0.copy() , c )
+    #phi , M , V = Lax_Wendroff( x , t , phi0.copy() , c )
     #phi , M , V = Warming_Beam( x , t , phi0.copy() , c )
+    phi , M , V = TVD( x , t , phi0.copy() , c )
     "Plotting the results"
     plt.figure(0)
     plt.clf()
