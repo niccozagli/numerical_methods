@@ -15,9 +15,9 @@ from conservation_and_total_variation import *
 
 def upwind( x , t , phiold , c ):
     if(c>=0):
-        phi_upwind , M , V = FTBS( x , t , phiold , c )
+        phi_upwind , M , V , TV = FTBS( x , t , phiold , c )
     else:
-        phi_upwind , M , V = FTFS(x , t , phiold , c )
+        phi_upwind , M , V , TV = FTFS(x , t , phiold , c )
     return phi_upwind , M , V
 
 def FTBS( x , t , phiold , c ):
@@ -26,6 +26,7 @@ def FTBS( x , t , phiold , c ):
     nt = len(t)
     M = np.zeros(nt)
     V = np.zeros(nt)
+    TV = np.zeros(nt)
     for it in range(nt):
         for j in range(nx):
             phi[j] = phiold[j]-c*(phiold[j%nx]-phiold[(j-1)%nx])
@@ -33,7 +34,8 @@ def FTBS( x , t , phiold , c ):
         phiold = phi.copy()
         M[it] = first_mom(phiold)
         V[it] = second_mom(phiold)
-    return phiold , M , V
+        TV[it] = tot_var(phiold)
+    return phiold , M , V , TV
 
 def FTFS( x , t , phiold , c ):
     phi = np.zeros_like(phiold)
@@ -41,6 +43,7 @@ def FTFS( x , t , phiold , c ):
     nt = len(t)
     M = np.zeros(nt)
     V = np.zeros(nt)
+    TV = np.zeros(nt)
     for it in range(nt):
         for j in range(nx):
             phi[j] = phiold[j]+abs(c)*(phiold[(j+1)%nx]-phiold[j])
@@ -48,13 +51,15 @@ def FTFS( x , t , phiold , c ):
         phiold = phi.copy()
         M[it] = first_mom(phiold)
         V[it] = second_mom(phiold)
-    return phiold , M , V
+        TV[it] = tot_var(phiold)
+    return phiold , M , V , TV
 
 def BTCS( x , t , phiold , c ):
     nx = len(x)
     nt = len(t)
     M = np.zeros(nt)
     V = np.zeros(nt)
+    TV = np.zeros(nt)
     "We are going to solve a linear system of equations, where the matrix of "
     "coefficients is a circulant matrix, which is only defined by its first"
     "column that we will represent as a vector named 'q' "
@@ -66,7 +71,8 @@ def BTCS( x , t , phiold , c ):
         phiold = linalg.solve_circulant(q,phiold)
         M[it] = first_mom(phiold)
         V[it] = second_mom(phiold)
-    return phiold , M , V
+        TV[it] = tot_var(phiold)
+    return phiold , M , V , TV
 
 def Lax_Wendroff( x , t , phiold , c ):
     nx = len(x)
@@ -74,13 +80,15 @@ def Lax_Wendroff( x , t , phiold , c ):
     phi = np.zeros_like(phiold)
     M = np.zeros(nt)
     V = np.zeros(nt)
+    TV = np.zeros(nt)
     for it in range(nt):
         for j in range(nx):
             phi[j]=phiold[j]-c/2*( (1-c)*phiold[(j+1)%nx] + 2*c*phiold[j] - (1+c)*phiold[(j-1)%nx] )
         phiold=phi.copy()
-        M[it]=first_mom(phiold)
-        V[it]=second_mom(phiold)
-    return phiold , M , V
+        M[it] = first_mom(phiold)
+        V[it] = second_mom(phiold)
+        TV[it] = tot_var(phiold)
+    return phiold , M , V , TV
 
 def Warming_Beam( x , t , phiold , c ):
     nx = len(x)
@@ -88,64 +96,42 @@ def Warming_Beam( x , t , phiold , c ):
     phi = np.zeros_like(phiold)
     M = np.zeros(nt)
     V = np.zeros(nt)
+    TV = np.zeros(nt)
     for it in range(nt):
         for j in range(nx):
-            phi[j]=phiold[j]-c/2*( (3-c)*phiold[j] - 2*(2-c)*phiold[(j-1)%nx] + (1-c)*phiold[(j-2)%nx] )
-        phiold=phi.copy()
-        M[it]=first_mom(phiold)
-        V[it]=second_mom(phiold)
-    return phiold , M , V
+            phi[j] = phiold[j]-c/2*( (3-c)*phiold[j] - 2*(2-c)*phiold[(j-1)%nx] + (1-c)*phiold[(j-2)%nx] )
+        phiold = phi.copy()
+        M[it] = first_mom(phiold)
+        V[it] = second_mom(phiold)
+        TV[it] = tot_var(phiold)
+    return phiold , M , V , TV
 
 
 def TVD( x , t , phiold , c ):
-    if(c>=0):
-        phi , M , V = TVD_positive_speed( x , t , phiold , c )
-    else:
-        phi , M , V = TVD_negative_speed( x , t , phiold, c)
-    return phi , M , V
-
-
-def TVD_positive_speed( x , t , phiold , c):
+    # This works if c>0
     nx = len(x)
     nt = len(t)
-    phi = np.zeros_like(phiold)
     M = np.zeros(nt)
     V = np.zeros(nt)
+    TV = np.zeros(nt)
+    eps = 1e-10
     for it in range(nt):
+        flux = np.zeros_like(phiold)
         for j in range(nx):
-            A = phiold[j] - phiold[(j-1)%nx]
-            B = phiold[(j+1)%nx] - phiold[j]
-            C = phiold[(j-1)%nx] - phiold[(j-2)%nx]
-            eps = 10**-13
-            if( np.abs(A)>eps and np.abs(B)>eps):
-                r_right = A/B
-                r_left = C/A
-                psi_right = (r_right+np.abs(r_right))/(1+np.abs(r_right))
-                psi_left = (r_left+np.abs(r_left))/(1+np.abs(r_left))
+            if( np.abs( phiold[(j+1)%nx]-phiold[j] ) > eps) :
+                r = ( phiold[j]-phiold[(j-1)%nx] )/( phiold[(j+1)%nx]-phiold[j] )
+                psi = ( r+np.abs(r) )/( 1+np.abs(r) )
+                philax = (1+c)/2*phiold[j] + (1-c)/2*phiold[(j+1)%nx]
+                phiup = phiold[j]
+                flux[j] = psi*philax + (1-psi)*phiup
             else:
-                if(np.abs(B)<eps and np.abs(A)>eps):
-                    psi_right = 1+np.sign(A)
-                    r_left = C/A
-                    psi_left = (r_left+np.abs(r_left))/(1+np.abs(r_left))
-                elif(np.abs(B)>eps and np.abs(A)<eps):
-                    r_right = 0
-                    psi_right = 0
-                    psi_left = 1+np.sign(C)
-                elif(np.abs(B)<eps and np.abs(A)<eps):
-                    # r_right = 1
-                    psi_right = 1
-                    psi_left =  1+np.sign(C)
+                flux[j] = phiold[j]
 
-            phi_Hr = (1+c)/2*phiold[j]+(1-c)/2*phiold[(j+1)%nx]
-            phi_Lr = phiold[j]
-            phi_right = psi_right*phi_Hr + (1-psi_right)*phi_Lr
+        flux = np.insert(flux,0,flux[-1])
+        phiold = phiold -c*np.diff(flux)
 
-            phi_Hl = (1+c)/2*phiold[(j-1)%nx]+(1-c)/2*phiold[j]
-            phi_Ll = phiold[(j-1)%nx]
-            phi_left = psi_left*phi_Hl + (1-psi_left)*phi_Ll
+        M[it] = first_mom(phiold)
+        V[it] = second_mom(phiold)
+        TV[it] = tot_var(phiold)
 
-            phi[j] = phiold[j] - c*(phi_right-phi_left)
-        phiold=phi.copy()
-        M[it]=first_mom(phiold)
-        V[it]=second_mom(phiold)
-    return phiold , M , V
+    return phiold , M , V , TV
