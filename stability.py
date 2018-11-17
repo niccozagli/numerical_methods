@@ -47,7 +47,7 @@ def linearAdvect(parameters):
     plt.plot(x,phi2,'ro',markersize=1)
     plt.plot(x,phi3,'g+',markersize=1)
     plt.plot(x,phi4,'yx',markersize=1)
-    plt.show()
+
 
     phi0 = squareWave( x , alpha , beta )
     phiAnalytic = squareWave( (x-u*tmax)%(xmax-xmin) , alpha , beta )
@@ -64,9 +64,34 @@ def linearAdvect(parameters):
     plt.plot(x,phi2,'r')
     plt.plot(x,phi3,'g')
     plt.plot(x,phi4,'yo',markersize=2)
+
+    "Change nt to get a very high Courant number"
+    tmax = 0.75
+    nt = int(3e1)
+    t = np.linspace(tmin,tmax,nt)
+    dt = t[1]-t[0]
+    c = u*dt/dx
+
+    phiAnalytic = squareWave( (x-u*tmax)%(xmax-xmin) , alpha , beta )
+    phi1 , M , V , TV = BTCS( x , t , phi0.copy() , c )
+    phi2 , M , V , TV = Lax_Wendroff( x , t , phi0.copy() , c )
+    phi3 , M , V , TV = Warming_Beam( x , t , phi0.copy() , c )
+    phi4 , M , V , TV = TVD( x , t , phi0.copy() , c )
+
+    plt.figure(2)
+    plt.plot(x,phi0,'b--')
+    plt.plot(x,phiAnalytic,'b')
+
+    plt.plot(x,phi2,'r')
+    plt.plot(x,phi3,'g')
+    plt.plot(x,phi4,'yo',markersize=2)
+
+    plt.figure(3)
+    plt.plot(x,phi0,'b--')
+    plt.plot(x,phiAnalytic,'b')
+    plt.plot(x,phi1,'k')
+
     plt.show()
-
-
 
 
 main()
