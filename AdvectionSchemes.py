@@ -120,7 +120,9 @@ def TVD( x , t , phiold , c ):
         for j in range(nx):
             if( np.abs( phiold[(j+1)%nx]-phiold[j] ) > eps) :
                 r = ( phiold[j]-phiold[(j-1)%nx] )/( phiold[(j+1)%nx]-phiold[j] )
-                psi = max(0,min(2*r,1),min(r,2))#(r**2+r)/(r**2+1)#( r+np.abs(r) )/( 1+np.abs(r) )
+                psi = max(0,min(2*r,1),min(r,2))
+                #psi = (r**2+r)/(r**2+1)
+                #psi = ( r+np.abs(r) )/( 1+np.abs(r) )
                 philax = (1+c)/2*phiold[j] + (1-c)/2*phiold[(j+1)%nx]
                 phiup = phiold[j]
                 flux[j] = psi*philax + (1-psi)*phiup

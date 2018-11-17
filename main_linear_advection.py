@@ -32,8 +32,8 @@ def linearAdvect(parameters):
     print("The value of the Courant number is c={}.".format(c))
 
     "Initial condition"
-    alpha = 0.1
-    beta = 0.3
+    alpha = x[int(0.2*len(x))]
+    beta = x[int(0.4*len(x))]
     #phi0 = cosBell( x , alpha , beta )
     phi0 = squareWave(x,alpha,beta)
     "Analytical solution at the last time tmax"
@@ -48,7 +48,7 @@ def linearAdvect(parameters):
     "Plotting the results"
     plt.figure(0)
     plt.clf()
-    plt.plot(x,phi0,'b-',label='Initial Condition')
+    plt.plot(x,phi0,'bo',label='Initial Condition')
     plt.plot(x,phiAnalytic,'k-',label='Analytical solution')
     plt.plot(x,phi,'r-',label='Numerical solution',linewidth=0.7)
     #plt.legend()
@@ -56,7 +56,7 @@ def linearAdvect(parameters):
     plt.ylabel('Independent variable')
     plt.title('Initial, analytical and numerical solution')
     plt.show()
-    
+
 
 "Calling the main function of the program"
 main()
