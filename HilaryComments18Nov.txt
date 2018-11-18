@@ -1,0 +1,52 @@
+Comments on commit
+3175e595ba4defb55c74beaa1e3d4fc07c66865f
+
+Reported problem - results of the TVD scheme are not symmetric
+
+Comments on file AdvectionSchemes.py
+All functions need doc-strings
+
+I am running 
+main_linear_advection.py
+to try to reproduce the problem but I am not sure what I am looking at with the graph. You should use coarser resolution so that the differences between the numerical and analytic solution are clear.
+
+I am adding a legend to make it clearer what I am looking at.
+
+Set the Courant number rather than the fluid velocity as the problem is completely defined by nx, nt and the Courant number.
+
+You will need to change the names of variables that are all called phi so that you can plot the results of more than one scheme on each graph so that you can more easily compare schemes.
+
+Design the code so that you don't need to comment and uncomment code to produce all of the results. I should be able to reproduce all of the results that you use in your report by running your script without modification.
+
+x_sample_points and t_sample_points should be integers, not floating point values.
+
+I have made some changes to see more clearly what is happening:
+
+    parameters={'xmin': 0 , 'xmax' : 1, 'x_sample_points' : 20,
+                'tmin': 0 , 'tmax' : 1, 't_sample_points' : 10,
+                'fluid_velocity' : 0.3}
+
+    print('x = ', x)
+    print('t = ', t)
+
+and I got the results:
+
+The value of the Courant number is c=0.6333333333333334.
+x =  [ 0.          0.05263158  0.10526316  0.15789474  0.21052632  0.26315789
+  0.31578947  0.36842105  0.42105263  0.47368421  0.52631579  0.57894737
+  0.63157895  0.68421053  0.73684211  0.78947368  0.84210526  0.89473684
+  0.94736842  1.        ]
+t =  [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+  0.66666667  0.77777778  0.88888889  1.        ]
+
+Is that what you were expecting?
+You have used:
+    x = np.linspace(xmin,xmax,nx)
+    t = np.linspace(tmin,tmax,nt)
+
+whereas in the sample code that I gave out I used:
+x = np.arange(xmin, xmax, dx)
+
+so that x points are not defined at both ends. This is the easiest way to implement periodic boundary conditions. In fact the implementations in your AdvectionSchemes.py file are consistent with my definition of x, not with your definition. I think that your code would be correct if you stuck more closely to my sample code. 
+
+Finally if your final solution is not moved by an integer number of grid points then the solution (and the analytic solution) will inevitably look asymmetric. You might think that you are moving an integer number of grid points but because of your definitions of t and x I am not sure. You might be moving by not enough time steps. This will also give you a first order error.
