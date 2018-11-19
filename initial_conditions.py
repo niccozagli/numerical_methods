@@ -29,3 +29,6 @@ def squareWave(x,alpha,beta):
         phi[j] = max((min(beta, xright) - max(alpha, xleft))/dx, 0)
 
     return phi
+
+def gaussian(x,mean,std):
+    return np.exp(-(x-mean)**2 / (2*std**2) ) /np.sqrt(2*np.pi*std**2)

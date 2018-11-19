@@ -18,7 +18,7 @@ def upwind( x , t , phiold , c ):
         phi_upwind , M , V , TV = FTBS( x , t , phiold , c )
     else:
         phi_upwind , M , V , TV = FTFS(x , t , phiold , c )
-    return phi_upwind , M , V
+    return phi_upwind , M , V , TV
 
 def FTBS( x , t , phiold , c ):
     phi = np.zeros_like(phiold)
