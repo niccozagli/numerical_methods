@@ -23,11 +23,11 @@ def linearAdvect(parameters):
     u = parameters['fluid_velocity']
 
     "Derived parameters"
-    x = np.linspace(xmin,xmax,nx)
-    t = np.linspace(tmin,tmax,nt)
-    dx = x[1]-x[0]
-    dt = t[1]-t[0]
+    dx = (xmax-xmin)/nx
+    dt = (tmax-tmin)/nt
     c = u*dt/dx
+    x = np.arange(xmin,xmax,nx)
+    t = np.arange(tmin,tmax,nt)
     print("The value of the Courant number is c={}.".format(c))
 
     "Initial condition"
