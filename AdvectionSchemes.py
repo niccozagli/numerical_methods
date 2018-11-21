@@ -84,7 +84,7 @@ def BTCS( x , t , phiold , c ):
     return phiold , M , V , TV
 
 def Lax_Wendroff( x , t , phiold , c ):
-    "Lax Wendroff scheme. Input and output described at the beginning of the module""
+    "Lax Wendroff scheme. Input and output described at the beginning of the module"
     nx = len(x)
     nt = len(t)
     phi = np.zeros_like(phiold)
@@ -154,7 +154,7 @@ def TVD( x , t , phiold , c ):
         # equal to the last flux. With np.diff we can now evaluate how the value of the solution
         # in the cells have changed.
         flux = np.insert(flux,0,flux[-1])
-        phiold = phiold -c*np.diff(flux) # evaluating new values of the solution 
+        phiold = phiold -c*np.diff(flux) # evaluating new values of the solution
 
         M[it] = first_mom(phiold)
         V[it] = second_mom(phiold)

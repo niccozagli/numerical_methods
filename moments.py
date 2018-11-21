@@ -82,7 +82,7 @@ def mom(parameters):
     ax = plt.gca()
     ax.set_xlabel( r"$x$" , labelpad=0.1 )
     ax.set_ylabel( r"$\varphi$" , labelpad=0.1 )
-    plt.savefig('Figures/Discontinuos_advection.jpeg')
+    plt.savefig('Figures/Discontinuos_advection.eps', dpi = 1000 )
 
     plt.figure(1)
     plt.clf()
@@ -95,7 +95,7 @@ def mom(parameters):
     ax1 = plt.gca()
     ax1.set_xlabel( r"$t$" , labelpad=0.1 )
     ax1.set_ylabel( r"$V(t)$", labelpad=0.1 )
-    plt.savefig('Figures/Variance.jpeg')
+    plt.savefig('Figures/Variance.eps', dpi = 1000 )
 
     plt.figure(2)
     plt.clf()
@@ -109,4 +109,4 @@ def mom(parameters):
     ax2 = plt.gca()
     ax2.set_xlabel( r"$t$" , labelpad=0.1 )
     ax2.set_ylabel( r"$TV(t)$", labelpad=0.1 )
-    plt.savefig('Figures/Total_variation.jpeg')
+    plt.savefig('Figures/Total_variation.eps', dpi = 1000 )

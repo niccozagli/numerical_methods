@@ -99,7 +99,7 @@ def integrate(parameters,saveBTCSfig):
 
     if( saveBTCSfig == 0 ): #Inside this block, the configuration is stable
         # Saving figure 0 in the directory Figures
-        plt.savefig('Figures/Stable_configuration.jpeg')
+        plt.savefig('Figures/Stable_configuration.eps', dpi = 1000 )
         # Plotting the first moment
         plt.figure(1)
         plt.clf()
@@ -111,14 +111,14 @@ def integrate(parameters,saveBTCSfig):
         plt.plot(t[::tau],MTVD[::tau],'mx')
         plt.ylim((29.9,30.1))
         ax1 = plt.gca()
-        ax1.set_xlabel(r"t", labelpad=0.1 )
-        ax1.set_ylabel(r"M(t)", labelpad=0.1 )
+        ax1.set_xlabel(r"$t$", labelpad=0.1 )
+        ax1.set_ylabel(r"$M(t)$", labelpad=0.1 )
         # Saving figure 1 in the directory Figures
-        plt.savefig('Figures/First_moments.jpeg')
+        plt.savefig('Figures/First_moments.eps', dpi = 1000 )
 
     elif( saveBTCSfig==1 ): #In this block the configuration is unstable
         # Saving figure 0 in the directory Figures
-        plt.savefig('Figures/Unstable_configuration.jpeg')
+        plt.savefig('Figures/Unstable_configuration.eps', dpi = 1000 )
         # Plotting the figure for the BTCS
         plt.figure(1)
         plt.clf()
@@ -130,4 +130,4 @@ def integrate(parameters,saveBTCSfig):
         ax1 = plt.gca()
         ax1.set_xlabel( r"$x$" , labelpad=0.1 )
         ax1.set_ylabel(r"$\varphi$")
-        plt.savefig('Figures/BTCS_scheme.jpeg')
+        plt.savefig('Figures/BTCS_scheme.eps', dpi = 1000 )

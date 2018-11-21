@@ -29,7 +29,7 @@ def get_accuracy_figure():
     acc(parameters,nx_list,nt_list)
 
 
-# Definitio of the second function 
+# Definitio of the second function
 def acc(parameters,nx_list,nt_list):
     "This function integrates the PDE multiple times. Each time it evaluates the"
     "error between the numerical and exact solution. This function has 3 inputs:"
@@ -98,5 +98,5 @@ def acc(parameters,nx_list,nt_list):
     plt.xscale("log")
     ax = plt.gca()
     ax.set_xlabel( r"$\Delta x$" , labelpad = 0.1 )
-    ax.set_ylabel( r"$l_2(t_max)$" , labelpad = 0.1 )
-    plt.savefig('Figures/Accuracy.jpeg')
+    ax.set_ylabel( r"$l_2(t_{max})$" , labelpad = 0.1 )
+    plt.savefig('Figures/Accuracy.eps', dpi = 1000 )
