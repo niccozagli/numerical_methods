@@ -23,14 +23,18 @@ def main():
     # Check if the directory already exists.
     try:
         os.mkdir(dirName)
-        print("Directory", dirName, "created")
+        print("Directory", dirName, "created.\n")
     except FileExistsError:
-        print("Directory", dirName, "already exists. \n Still going on with execution \n")
-        
-    ############ COMMENTA OGNI FUNZIONE
-    #get_stability_figure()
-    #get_moments_figure()
-    #get_accuracy_figure()
+        print("Directory", dirName, "already exists.\nStill going on with execution.\n")
+
+    print("Printing figures concerning continuous initial condition. \n")
+    get_stability_figure()
+
+    print("Printing figures concerning discontinuous initial condition. \n")
+    get_moments_figure()
+
+    print("Moving on to accuracy tests. \n")
+    get_accuracy_figure()
 
 
 "Calling the main function"
